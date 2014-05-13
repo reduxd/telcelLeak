@@ -1,0 +1,181 @@
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>telcel info POC</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
+
+    <style type='text/css'>
+    	a {
+    		color: #6495ED;
+    		text-decoration: none;
+		}	
+
+		a:hover {
+  			text-decoration: underline;
+		}
+
+		body {
+    		margin: 0;
+		}
+
+		footer {
+    		position: fixed;
+    		bottom: 0;
+    		height: 50px;
+    		width: 50%;
+    		font-size: 10pt;
+    		margin-left: 0;
+    		text-align: center;
+		}
+
+        @-webkit-keyframes expand {
+            0% {
+                -webkit-transform: scale(0);
+            }
+
+            50% {
+                -webkit-transform: scale(1);
+            }
+
+            100% {
+                z-index: 1;
+            }
+        }
+
+        @-moz-keyframes expand {
+            0% {
+                -moz-transform: scale(0);
+            }
+
+            50% {
+                -moz-transform: scale(1);
+            }
+
+            100% {
+                z-index: 1;
+            }
+        }
+
+        @-o-keyframes expand {
+            0% {
+                -o-transform: scale(0);
+            }
+
+            50% {
+                -o-transform: scale(1);
+            }
+
+            100% {
+                z-index: 1;
+            }
+        }
+
+        @keyframes expand {
+            0% {
+                transform: scale(0);
+            }
+
+            50% {
+                transform: scale(1);
+            }
+
+            100% {
+                z-index: 1;
+            }
+        }
+
+        .loader {
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            margin: -20px 0 0 -20px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 6.66667px #141414;
+            width: 40px;
+            height: 40px;
+        }
+
+        .loader:before, .loader:after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            display: block;
+            margin: -21px 0 0 -21px;
+            border-radius: 50%;
+            z-index: 2;
+            width: 42px;
+            height: 42px;
+        }
+
+        .loader:before {
+            background-color: #141414;
+            -webkit-animation: expand 1.6s linear infinite both;
+            -moz-animation: expand 1.6s linear infinite both;
+            animation: expand 1.6s linear infinite both;
+        }
+
+        .loader:after {
+            background-color: white;
+            -webkit-animation: expand 1.6s linear 0.8s infinite both;
+            -moz-animation: expand 1.6s linear 0.8s infinite both;
+            animation: expand 1.6s linear 0.8s infinite both;
+        }
+
+	</style>
+</head>
+
+<body>
+	<script>
+    	var socket = io.connect();
+    $(function(){
+
+        socket.on('swag', function (one, two, three, four, five, six) {
+            $('#art').remove();
+            $('#data').remove();
+            $('#send').remove();
+            $('#top').append('Nombre : ' + one + '<br>');
+            $('#top').append('Cliente Telcel? : ' + two + '<br>');
+            $('#top').append('Tipo de Cuenta : ' + three + '<br>');
+            $('#top').append('ID de Cuenta : ' + four + '<br>');
+            $('#top').append('Contraseña/NIP : ' + five + '<br>');
+            $('#top').append('Cuenta Suspendida? : ' + six + '<br>');
+        });
+
+        socket.on('swag2', function (one) {
+            $('#top').append('Ultimos 4 Digitos de Tarjeta : ' + one);
+        });
+
+        $('#send').click( function() {
+            var search = $('#data').val();
+            $('#data').val('');
+            socket.emit('send', search);
+        });
+
+        $('#data').keypress(function(e) {
+            if(e.which == 13) {
+                $(this).blur();
+                $('#send').focus().click();
+            }
+        });
+    });
+  	</script>
+    <div id="top" style="font-family: 'Roboto Condensed', sans-serif; font-size: 30pt; font-weight: bold; margin-top: 7%;  width: 100%; text-align: center;">
+        </div>
+        <div id="art" style="font-family: 'Roboto Condensed', sans-serif; font-size: 40pt; font-weight: bold; margin-top: 15%;  width: 100%; text-align: center;">
+            telcel proof-of-concept<br>
+            UPDATE: Telcel ha arreglado la falla, pero todavia<br>
+            salen numeros de tarjeta si tienes una registrada.
+        </div>
+        <div style="font-family: 'Roboto Condensed', sans-serif; font-size: 16pt; width:50%; margin-left:25%; text-align: center;">
+            <p>
+                <input id="data" style="width:200px;" placeholder="numero de celular telcel" /><input type="button" id="send" value="check" />
+            </p>
+            <footer>
+                hecho por <a href="http://twitter.com/reduxd">@reduxd</a>
+            </footer>
+        </div>
+</body>
+</html>
